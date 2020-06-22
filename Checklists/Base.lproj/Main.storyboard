@@ -41,7 +41,7 @@
                     <navigationItem key="navigationItem" title="Checklists" id="vHf-Nh-Mim">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="iGF-4q-xfg">
                             <connections>
-                                <segue destination="sdl-VX-zw2" kind="show" id="ZSm-kw-5r5"/>
+                                <segue destination="sdl-VX-zw2" kind="show" identifier="AddItem" id="ZSm-kw-5r5"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
