@@ -11,6 +11,7 @@ import UIKit
 protocol AddItemTableViewControllerDelegate: class {
     func addItemTableViewControllerDidCancel(_ controller: AddItemTableViewController)
     func addItemTableViewController(_ controller: AddItemTableViewController, didFinishAdding item: ChecklistItem)
+    func addItemTableViewController(_ controller: AddItemTableViewController, didFinishEditing item: ChecklistItem)
 }
 
 class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
@@ -20,10 +21,16 @@ class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     weak var delegate: AddItemTableViewControllerDelegate?
+    var itemToEdit: ChecklistItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if let itemToEdit = itemToEdit{
+            title = "Edit Item"
+            textField.text = itemToEdit.text
+            doneBarButton.isEnabled = true
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -45,11 +52,16 @@ class AddItemTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     @IBAction func done() {
-        let item = ChecklistItem()
-        item.text = textField.text!
-        item.checked = false
-        
-        delegate?.addItemTableViewController(self, didFinishAdding: item)
+        print("Contents of the text field: \(textField.text!)")
+        if let itemToEdit = itemToEdit{
+            itemToEdit.text = textField.text!
+            delegate?.addItemTableViewController(self, didFinishEditing: itemToEdit)
+        } else{
+            let item = ChecklistItem()
+            item.text = textField.text!
+            
+            delegate?.addItemTableViewController(self, didFinishAdding: item)
+        }
         
         //print("Contents of the text field: \(textField.text!)")
         //navigationController?.popViewController(animated: true)

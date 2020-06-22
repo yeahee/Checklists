@@ -54,7 +54,7 @@ class ChecklistViewController: UITableViewController, AddItemTableViewController
         return cell
     }
     
-    // Mark:- Table View Delegate
+    // MARK:- Table View Delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath){
             let item = items[indexPath.row]
@@ -67,10 +67,11 @@ class ChecklistViewController: UITableViewController, AddItemTableViewController
     
     /* For Checkmark */
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
+        let label = cell.viewWithTag(1001) as! UILabel
         if item.checked {
-            cell.accessoryType = .checkmark
+            label.text = "✔️"
         } else {
-            cell.accessoryType = .none
+            label.text = ""
         }
     }
     
@@ -104,11 +105,29 @@ class ChecklistViewController: UITableViewController, AddItemTableViewController
         navigationController?.popViewController(animated: true)
     }
     
+    /* For Editing */
+    func addItemTableViewController(_ controller: AddItemTableViewController, didFinishEditing item: ChecklistItem){
+        if let index = items.firstIndex(of: item){
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath){
+                configureText(for: cell, with: item)
+            }
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddItem"{
             let controller = segue.destination as! AddItemTableViewController
             controller.delegate = self
+        } else if segue.identifier == "EditItem"{
+            let controller = segue.destination as! AddItemTableViewController
+            controller.delegate = self
+            
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell){
+                controller.itemToEdit = items[indexPath.row]
+            }
         }
     }
 }
